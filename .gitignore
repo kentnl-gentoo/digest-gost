@@ -1,9 +1,0 @@
-Digest-GOST-*
-GOST.bs
-GOST.c
-GOST.o
-MANIFEST.bak
-Makefile
-Makefile.old
-blib/
-pm_to_blib
