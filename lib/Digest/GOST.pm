@@ -6,7 +6,7 @@ use parent qw(Exporter Digest::base);
 
 use MIME::Base64 ();
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 $VERSION = eval $VERSION;
 
 eval {
@@ -19,14 +19,6 @@ eval {
 };
 
 our @EXPORT_OK = qw(gost gost_hex gost_base64);
-
-# TODO: convert to C.
-sub gost_hex  { unpack 'H*', gost(@_) }
-sub gost_base64 {
-    my $b64 = MIME::Base64::encode(gost(@_), '');
-    $b64 =~ s/=+$//g;
-    return $b64;
-}
 
 
 1;
