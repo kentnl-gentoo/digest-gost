@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Digest-GOST
-version:            0.03
+version:            0.04
 abstract:           Perl interface to the GOST R 34.11-94 digest algorithm
 author:
     - gray <gray@cpan.org>
@@ -11,9 +11,8 @@ configure_requires:
 build_requires:
     Test::More:  0.82
 requires:
-    Digest:        0
-    MIME::Base64:  0
-    parent:        0
+    Digest:  0
+    parent:  0
 resources:
     repository:  http://github.com/gray/digest-gost
 no_index:
