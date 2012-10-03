@@ -69,11 +69,9 @@ make_mortal_sv(pTHX_ const unsigned char *src, int len, int enc) {
 }
 
 typedef gost_ctx *Digest__GOST;
+typedef gost_ctx *Digest__GOST__CryptoPro;
 
 MODULE = Digest::GOST    PACKAGE = Digest::GOST
-
-BOOT:
-    gost_init_table();
 
 PROTOTYPES: ENABLE
 
@@ -90,12 +88,12 @@ PREINIT:
     unsigned char result[32];
     STRLEN len;
 CODE:
-    gost_init(&ctx);
+    rhash_gost_init(&ctx);
     for (i = 0; i < items; i++) {
         data = (unsigned char *)(SvPV(ST(i), len));
-        gost_update(&ctx, data, len);
+        rhash_gost_update(&ctx, data, len);
     }
-    gost_final(&ctx, result);
+    rhash_gost_final(&ctx, result);
     ST(0) = make_mortal_sv(aTHX_ result, 32, ix);
     XSRETURN(1);
 
@@ -104,7 +102,7 @@ new (class)
     SV *class
 CODE:
     Newx(RETVAL, 1, gost_ctx);
-    gost_init(RETVAL);
+    rhash_gost_init(RETVAL);
 OUTPUT:
     RETVAL
 
@@ -121,7 +119,7 @@ void
 reset (self)
     Digest::GOST self
 PPCODE:
-    gost_init(self);
+    rhash_gost_init(self);
     XSRETURN(1);
 
 void
@@ -134,11 +132,11 @@ PREINIT:
 PPCODE:
     for (i = 1; i < items; i++) {
         data = (unsigned char *)(SvPV(ST(i), len));
-        gost_update(self, data, len);
+        rhash_gost_update(self, data, len);
     }
     XSRETURN(1);
 
-SV *
+void
 digest (self)
     Digest::GOST self
 ALIAS:
@@ -148,8 +146,8 @@ ALIAS:
 PREINIT:
     unsigned char result[32];
 CODE:
-    gost_final(self, result);
-    gost_init(self);
+    rhash_gost_final(self, result);
+    rhash_gost_init(self);
     ST(0) = make_mortal_sv(aTHX_ result, 32, ix);
     XSRETURN(1);
 
@@ -158,3 +156,58 @@ DESTROY (self)
     Digest::GOST self
 CODE:
     Safefree(self);
+
+MODULE = Digest::GOST   PACKAGE = Digest::GOST::CryptoPro
+
+void
+gost (...)
+ALIAS:
+    gost = 0
+    gost_hex = 1
+    gost_base64 = 2
+PREINIT:
+    gost_ctx ctx;
+    int i;
+    unsigned char *data;
+    unsigned char result[32];
+    STRLEN len;
+CODE:
+    rhash_gost_cryptopro_init(&ctx);
+    for (i = 0; i < items; i++) {
+        data = (unsigned char *)(SvPV(ST(i), len));
+        rhash_gost_update(&ctx, data, len);
+    }
+    rhash_gost_final(&ctx, result);
+    ST(0) = make_mortal_sv(aTHX_ result, 32, ix);
+    XSRETURN(1);
+
+Digest::GOST::CryptoPro
+new (class)
+    SV *class
+CODE:
+    Newx(RETVAL, 1, gost_ctx);
+    rhash_gost_cryptopro_init(RETVAL);
+OUTPUT:
+    RETVAL
+
+void
+reset (self)
+    Digest::GOST::CryptoPro self
+PPCODE:
+    rhash_gost_cryptopro_init(self);
+    XSRETURN(1);
+
+void
+digest (self)
+    Digest::GOST::CryptoPro self
+ALIAS:
+    digest = 0
+    hexdigest = 1
+    b64digest = 2
+PREINIT:
+    unsigned char result[32];
+CODE:
+    rhash_gost_final(self, result);
+    rhash_gost_cryptopro_init(self);
+    ST(0) = make_mortal_sv(aTHX_ result, 32, ix);
+    XSRETURN(1);

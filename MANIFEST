@@ -2,6 +2,7 @@ Changes
 ex/benchmark.pl
 GOST.xs
 lib/Digest/GOST.pm
+lib/Digest/GOST/CryptoPro.pm
 Makefile.PL
 MANIFEST			This list of files
 ppport.h
@@ -10,12 +11,13 @@ src/byte_order.c
 src/byte_order.h
 src/gost.c
 src/gost.h
-src/platform-dependent.h
-src/stdint.h
-src/unistd.h
+src/win32/platform-dependent.h
+src/win32/stdint.h
+src/win32/unistd.h
 t/00_load.t
 t/01_new.t
-t/gost.t
+t/gost_cryptopro.t
+t/gost_test.t
 typemap
 xt/kwalitee.t
 xt/leaktrace.t
@@ -26,4 +28,5 @@ xt/pod_coverage.t
 xt/portability_filenames.t
 xt/valgrind.t
 xt/vars.t
-META.yml                                 Module meta-data (added by MakeMaker)
+META.yml                                 Module YAML meta-data (added by MakeMaker)
+META.json                                Module JSON meta-data (added by MakeMaker)

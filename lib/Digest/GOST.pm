@@ -4,17 +4,13 @@ use strict;
 use warnings;
 use parent qw(Exporter Digest::base);
 
-our $VERSION = '0.05';
+use XSLoader;
+
+our $VERSION = '0.06';
+our $XS_VERSION = $VERSION;
 $VERSION = eval $VERSION;
 
-eval {
-    require XSLoader;
-    XSLoader::load(__PACKAGE__, $VERSION);
-    1;
-} or do {
-    require DynaLoader;
-    DynaLoader::bootstrap(__PACKAGE__, $VERSION);
-};
+XSLoader::load(__PACKAGE__, $XS_VERSION);
 
 our @EXPORT_OK = qw(gost gost_hex gost_base64);
 
@@ -55,6 +51,9 @@ message digest algorithm.
 
 This interface follows the conventions set forth by the C<Digest> module.
 
+This module uses the default "test" parameters. To use the CryptoPro
+parameters, use C<Digest::GOST::CryptoPro>.
+
 =head1 FUNCTIONS
 
 The following functions are provided by the C<Digest::GOST> module. None of
@@ -82,11 +81,13 @@ described by C<Digest>.
 
 =head1 SEE ALSO
 
+L<Digest::GOST::CryptoPro>
+
 L<Digest>
 
 L<Task::Digest>
 
-L<http://en.wikipedia.org/wiki/GOST_%28hash_function%29>
+L<http://en.wikipedia.org/wiki/GOST_(hash_function)>
 
 =head1 REQUESTS AND BUGS
 
@@ -129,7 +130,7 @@ L<http://search.cpan.org/dist/Digest-GOST/>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2010 gray <gray at cpan.org>, all rights reserved.
+Copyright (C) 2010-2012 gray <gray at cpan.org>, all rights reserved.
 
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
